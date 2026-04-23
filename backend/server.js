@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const applicationRoutes = require('./routes/applicationRoutes'); 
 const connectDB = require("./config/db");
 
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json()); //body parser
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use('/api/applications', applicationRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running");
