@@ -11,7 +11,10 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Frontend ka URL
+  credentials: true  // Cookies allow karne ke liye
+}))
 app.use(express.json()); //body parser
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);

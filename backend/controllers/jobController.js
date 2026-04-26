@@ -110,5 +110,17 @@ const deleteJob = async (req, res) => {
   }
 };
 
-module.exports = { createJob, getJobs, getJobById, updateJob, deleteJob }; // एक्सपोर्ट अपडेट कर
+
+// Get all jobs from DB
+getAllJobs = async (req, res) => {
+  try {
+    // Fetch all jobs, newest first
+    const jobs = await Job.find().sort({ createdAt: -1 });
+    res.status(200).json(jobs);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { createJob, getJobs, getJobById, updateJob, deleteJob,getAllJobs }; // एक्सपोर्ट अपडेट कर
 
