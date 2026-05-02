@@ -4,22 +4,21 @@ const User = require("../models/User");
 const protect = async (req, res, next) => {
   let token;
 
-  // 1. Header se token find
+  // 1. Header  token find
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      // "Bearer eyJhbG..." से सिर्फ token वाला हिस्सा लेना
+      // extract token from 'Bearer <token>' format
       token = req.headers.authorization.split(" ")[1];
 
-      // 2. Token to verify
+      // 2. verify jwt token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // 3. DB से यूजर ढूंढकर req में डाल दे, password हटाकर
+      // 3. attach user to request object, exclude password
       req.user = await User.findById(decoded.id).select("-password");
-
-      next(); // सब सही है, आगे बढ़ो
+      next();
     } catch (error) {
       console.error(error);
       res.status(401).json({ message: "Not authorized, token failed" });
@@ -38,4 +37,12 @@ const employer = (req, res, next) => {
   }
 };
 
-module.exports = { protect, employer };
+const adminOnly = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Admin access only" });
+  }
+};
+
+module.exports = { protect, employer, adminOnly };

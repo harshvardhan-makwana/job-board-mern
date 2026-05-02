@@ -1,17 +1,17 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api', 
-  withCredentials: true // Cookies bhejne ke liye
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true
 })
 
-// Token auto add karne ke liye
+
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user?.token) {
+    config.headers.Authorization = `Bearer ${user.token}`;
   }
-  return config
-})
+  return config;
+});
 
-export default api
+export default api;

@@ -17,12 +17,12 @@ const applicationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'reviewed', 'rejected', 'hired'],
+    enum: ['pending', 'reviewed','shortlisted', 'rejected', 'hired'],
     default: 'pending'
   }
 }, { timestamps: true });
 
-// 1 user 1 job पे सिर्फ 1 बार apply कर सके
+// Ensure user can apply to a job only once
 applicationSchema.index({ job: 1, applicant: 1 }, { unique: true });
 
 module.exports = mongoose.model('Application', applicationSchema);

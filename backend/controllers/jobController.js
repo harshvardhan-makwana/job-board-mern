@@ -15,7 +15,7 @@ const createJob = async (req, res) => {
       requirements,
       salary,
       jobType,
-      user: req.user._id, // middleware से आएगा
+      user: req.user._id, // get user Id from auth middleware
     });
 
     const createdJob = await job.save();
@@ -31,7 +31,7 @@ const createJob = async (req, res) => {
 // @access Public
 const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({}).populate("user", "name email"); // user की id से name,email ले आओ
+    const jobs = await Job.find({}).populate("user", "name email"); 
     return res.json(jobs);
   } catch (error) {
     console.error(error);
@@ -64,7 +64,7 @@ const updateJob = async (req, res) => {
     const job = await Job.findById(req.params.id);
 
     if (job) {
-      // Check: job उसी employer ने बनाई है या नहीं
+      // check if user owns this job
       if (job.user.toString() !== req.user._id.toString()) {
         return res.status(401).json({ message: "Not authorized to update this job" });
       }
@@ -95,7 +95,7 @@ const deleteJob = async (req, res) => {
     const job = await Job.findById(req.params.id);
 
     if (job) {
-      // Check: job उसी employer ने बनाई है या नहीं
+      // check if user owns this job
       if (job.user.toString() !== req.user._id.toString()) {
         return res.status(401).json({ message: "Not authorized to delete this job" });
       }
@@ -122,5 +122,19 @@ getAllJobs = async (req, res) => {
   }
 };
 
-module.exports = { createJob, getJobs, getJobById, updateJob, deleteJob,getAllJobs }; // एक्सपोर्ट अपडेट कर
+// @desc    Get jobs posted by logged in employer
+// @route   GET /api/jobs/my-jobs
+// @access  Private/Employer
+const getMyJobs = async (req, res) => {
+  try {
+    // fetch jobs posted by current user
+    const jobs = await Job.find({ user: req.user._id }).sort({ createdAt: -1 })
+    res.json(jobs)
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' })
+  }
+}
+
+
+module.exports = { createJob, getJobs, getJobById, updateJob, deleteJob,getAllJobs,getMyJobs }; 
 

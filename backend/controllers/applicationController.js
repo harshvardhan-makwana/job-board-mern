@@ -1,7 +1,7 @@
 const Application = require('../models/Application.js');
 const Job = require('../models/Job.js');
 
-// @desc    Apply to a job
+// Apply to a job
 // @route   POST /api/applications/:jobId
 // @access  Private/Jobseeker
 const applyToJob = async (req, res) => {
@@ -60,4 +60,49 @@ const getJobApplicants = async (req, res) => {
   }
 };
 
-module.exports = { applyToJob, getJobApplicants };
+const getMyApplications = async (req, res) => {
+  try {
+    const applications = await Application.find({ applicant: req.user._id })
+      .populate('job', 'title company location salary') // also fetch related job details
+      .sort({ createdAt: -1 })
+    
+    res.json(applications)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+const updateStatus = async (req, res) => {
+  try {
+    
+    
+    const application = await Application.findById(req.params.id)
+    
+    
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' })
+    }
+
+    const job = await Job.findById(application.job)
+   
+    
+    if (!job) {
+      return res.status(404).json({ message: 'Job not found' })
+    }
+
+    
+    if (job.user.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: 'Not authorized' })
+    }
+
+    application.status = req.body.status
+    const updatedApp = await application.save()
+    
+    res.json(updatedApp)
+    
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+module.exports = { applyToJob, getJobApplicants,getMyApplications,updateStatus };

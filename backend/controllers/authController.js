@@ -6,8 +6,8 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
-// @desc Register new user
-// @route POST /api/auth/register
+//  Register new user
+//  POST /api/auth/register
 const registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;
 
@@ -43,22 +43,23 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    //email se user pata karo
+    //find user by email
     const user = await User.findOne({ email });
-    //password match karo
+    //verify password
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
+        createdAt:user.createdAt,
         token: generateToken(user._id),
       });
     } else {
       res.status(401).json({ message: "invalid email or password" });
     }
   } catch (error) {
-    console.error("login error:",error)
+    
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -66,7 +67,7 @@ const loginUser = async (req, res) => {
 // @route GET /api/auth/profile
 // @access Private
 const getUserProfile = async (req, res) => {
-  // req.user middleware से आएगा
+  // req.user middleware 
   const user = await User.findById(req.user._id);
 
   if (user) {

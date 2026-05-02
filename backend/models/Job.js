@@ -4,7 +4,7 @@ const jobSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "User", // किस employer ने बनाई
+    ref: "User", 
   },
   title: {
     type: String,
@@ -23,7 +23,7 @@ const jobSchema = mongoose.Schema({
     required: [true, "Please add description"],
   },
   requirements: {
-    type: String,
+    type: [String],
     required: [true, "Please add requirements"],
   },
   salary: {
