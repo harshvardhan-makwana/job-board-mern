@@ -22,8 +22,6 @@ Coming Soon - Deploy on Vercel + Render
 
 **Tools:** Nodemon, Thunder Client, Git, GitHub
 
-## 📸 Screenshots
-Add your screenshots here: Login, My Jobs, Applicants Modal
 
 ## 📅 14 Day Development Journey
 
