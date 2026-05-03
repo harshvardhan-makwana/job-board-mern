@@ -13,7 +13,10 @@ connectDB();
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Frontend URL
+ origin: [
+    'http://localhost:5173', 
+    'https://job-board-mern-inky.vercel.app'
+  ],
   credentials: true  // Enable cookies for jwt auth
 }))
 app.use(express.json()); // parse JSON request bodies
