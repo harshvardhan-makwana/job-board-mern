@@ -3,7 +3,7 @@
 Full-stack Job Board application where employers can post jobs and job seekers can apply. Built with MERN stack + JWT Authentication + Role-based Access Control.
 
 ## ✨ Live Demo
-Coming Soon - Deploy on Vercel + Render
+https://job-board-mern-inky.vercel.app/
 
 ## 🛠️ Tech Stack
 
