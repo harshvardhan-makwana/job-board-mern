@@ -40,7 +40,7 @@ router.delete("/job/:id", protect, adminOnly, async (req, res) => {
   }
 });
 
-// DELETE /api/admin/users/:id - User delete karo
+// DELETE /api/admin/users/:id - User delete 
 router.delete("/users/:id", protect, adminOnly, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
